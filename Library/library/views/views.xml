@@ -1,0 +1,138 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    <record model="ir.ui.view" id="book_list_view">
+      <field name="name">library list</field>
+      <field name="model">library.book</field>
+      <field name="arch" type="xml">
+        <tree>
+            <field name="name"/>
+            <field name="author_id"/>
+            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+            <field name="status"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- from view for books -->
+    <record model="ir.ui.view" id="book_form_view">
+      <field name="name">books.form.view</field>
+      <field name="model">library.book</field>
+      <field name="arch" type="xml">
+        <form>
+          <header>
+            <button name="action_on_hand" string="On Hand" type="object" class="oe_highlight" attrs="{'invisible': [('status', 'in', ['on_hand', 'done'])]}"/>
+            <button name="%(library.action_wizard_on_hand)d" string="On Hand2" type="action" class="oe_highlight" attrs="{'invisible': [('status', 'in', ['on_hand', 'done'])]}"/>
+            <field name="status" widget="statusbar" statusbar_visible="on_shelf.on_hand"/>
+          </header>
+          <sheet>
+<!--            <div class="oe_button_box" name="button_box">-->
+<!--                <button name="action_in_progress" type="object" class="oe_stat_button" icon="fa-calendar">-->
+<!--                    <div class="o_stat_info">-->
+<!--                        <field name="value" class="o_stat_value"/>-->
+<!--                        <span class="o_stat_text"> Meeting</span>-->
+<!--                    </div>-->
+<!--                </button>-->
+<!--            </div>-->
+            <div class="oe_title">
+              <lavel for="name"/>
+              <h1><field class="o_text_overflow" name="name" placeholder="e.g. Harry Potter"/></h1>
+            </div>
+            <group>
+              <group>
+                <field name="number"/>
+                <field name="book_id"/>
+                <field name="author_id"/>
+                <field name="year"/>
+                <field name="lang_id"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="publishing_house"/>
+              </group>
+              <group>
+                <field name="partner_id" string="client"/>
+              </group>
+            </group>
+            <notebook>
+             <page string="Description">
+               <field name="description"/>
+             </page>
+            </notebook>
+          </sheet>
+            <div class="oe_chatter">
+                <field name="message_follower_ids" groups="base.group_user"/>
+                <field name="message_ids"/>
+            </div>
+        </form>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="book_info_form_view">
+      <field name="name">books.form.view</field>
+      <field name="model">library.book.info</field>
+      <field name="arch" type="xml">
+        <form>
+          <sheet>
+<!--            <div class="oe_button_box" name="button_box">-->
+<!--                <button name="action_in_progress" type="object" class="oe_stat_button" icon="fa-calendar">-->
+<!--                    <div class="o_stat_info">-->
+<!--                        <field name="value" class="o_stat_value"/>-->
+<!--                        <span class="o_stat_text"> Meeting</span>-->
+<!--                    </div>-->
+<!--                </button>-->
+<!--            </div>-->
+            <div class="oe_title">
+              <lavel for="name"/>
+              <h1><field class="o_text_overflow" name="name" placeholder="e.g. Harry Potter"/></h1>
+            </div>
+            <group>
+              <group string="Info">
+                <field name="author_id"/>
+                <field name="lang_id"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+              </group>
+            </group>
+            <notebook>
+             <page string="Description">
+               <field name="description"/>
+             </page>
+            </notebook>
+          </sheet>
+            <div class="oe_chatter">
+                <field name="message_follower_ids" groups="base.group_user"/>
+                <field name="message_ids"/>
+            </div>
+        </form>
+      </field>
+    </record>
+
+
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="action_book">
+      <field name="name">library window</field>
+      <field name="res_model">library.book</field>
+      <field name="view_mode">tree,kanban,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_book_info">
+      <field name="name">Books Info</field>
+      <field name="res_model">library.book.info</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <!-- Top menu item -->
+    <menuitem name="library" id="menu_root"/>
+    <menuitem name="Books" id="books" parent="menu_root"/>
+    <menuitem name="Configuration" id="configuration" parent="menu_root"/>
+    <!-- actions -->
+    <menuitem name="Books on Shelf" id="on_shelf" parent="books"
+              action="action_book"/>
+    <menuitem name="Books on Hand" id="on_hand" parent="books"
+              action="action_book"/>
+    <menuitem name="All" id="menu_all_books" parent="books"
+              action="action_book"/>
+    <menuitem name="Books Info" id="menu_book_info" parent="configuration"
+              action="action_book_info"/>
+
+  </data>
+</odoo>
